@@ -229,9 +229,10 @@ class CalendarHeatmap extends React.Component {
   }
 
   renderSquare(dayIndex, index) {
+    index-=1;
     const indexOutOfRange =
-      index < this.getNumEmptyDaysAtStart() ||
-      index >= this.getNumEmptyDaysAtStart() + this.getDateDifferenceInDays();
+      index < (this.getNumEmptyDaysAtStart() - 1) ||
+      index >= (this.getNumEmptyDaysAtStart() - 1) + this.getDateDifferenceInDays();
     if (indexOutOfRange && !this.props.showOutOfRangeDays) {
       return null;
     }
@@ -302,11 +303,11 @@ class CalendarHeatmap extends React.Component {
         this.props.horizontal ? '' : `${CSS_PSEDUO_NAMESPACE}small-text`
       } ${CSS_PSEDUO_NAMESPACE}weekday-label`;
       // eslint-disable-next-line no-bitwise
-      return dayIndex & 1 ? (
+      return (
         <text key={`${x}${y}`} x={x} y={y} className={cssClasses}>
           {weekdayLabel}
         </text>
-      ) : null;
+      );
     });
   }
 
