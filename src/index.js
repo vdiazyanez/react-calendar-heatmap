@@ -123,7 +123,7 @@ class CalendarHeatmap extends React.Component {
     if (this.valueCache[index]) {
       return this.valueCache[index].className;
     }
-    return this.props.classForValue(null);
+    return this.props.classForValue(null, index);
   }
 
   getTitleForIndex(index) {
