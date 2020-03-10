@@ -104,7 +104,7 @@ class CalendarHeatmap extends React.Component {
       // eslint-disable-next-line no-param-reassign
       memo[index] = {
         value,
-        className: this.props.classForValue(value),
+        className: this.props.classForValue(value, index),
         title: this.props.titleForValue ? this.props.titleForValue(value) : null,
         tooltipDataAttrs: this.getTooltipDataAttrsForValue(value),
       };
@@ -231,7 +231,7 @@ class CalendarHeatmap extends React.Component {
   renderSquare(dayIndex, index) {
     index-=1;
     const indexOutOfRange =
-      index < (this.getNumEmptyDaysAtStart() - 1) ||
+      index < (this.getNumEmptyDaysAtStart() - 2) ||
       index >= (this.getNumEmptyDaysAtStart() - 1) + this.getDateDifferenceInDays();
     if (indexOutOfRange && !this.props.showOutOfRangeDays) {
       return null;
