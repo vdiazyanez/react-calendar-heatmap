@@ -313,7 +313,7 @@ class CalendarHeatmap extends React.Component {
 
   render() {
     this.valueCache = this.getValueCache(this.props);
-
+    console.log('v!!');
     return (
       <svg className="react-calendar-heatmap" viewBox={this.getViewBox()}>
         <g
