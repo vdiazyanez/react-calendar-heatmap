@@ -97,24 +97,30 @@ class CalendarHeatmap extends React.Component {
     );
   }
 
-  getValueCache = memoizeOne((props) =>
-    props.values.reduce((memo, value) => {
+  getValueCache = memoizeOne((props) => {
+    console.log('[+] gettinvaluecache:',props);
+    return props.values.reduce((memo, value) => {
       const date = convertToDate(value.date);
       const index = Math.floor((date - this.getStartDateWithEmptyDays()) / MILLISECONDS_IN_ONE_DAY);
       // eslint-disable-next-line no-param-reassign
+      let tooltipDataAttrs = this.getTooltipDataAttrsForValue(value);
+      console.log('[+] cache:',memo,value,date,index,tooltipDataAttrs);
       memo[index] = {
         value,
         className: this.props.classForValue(value, index),
         title: this.props.titleForValue ? this.props.titleForValue(value) : null,
-        tooltipDataAttrs: this.getTooltipDataAttrsForValue(value),
+        tooltipDataAttrs
       };
       return memo;
-    }, {}),
+    }, {})},
   );
 
   getValueForIndex(index) {
     if (this.valueCache[index]) {
+      console.log('[+] valueforindex:',index,this.valueCache[index].value);
       return this.valueCache[index].value;
+    } else {
+      console.log('[!] no value for index:',index);
     }
     return null;
   }
@@ -135,16 +141,23 @@ class CalendarHeatmap extends React.Component {
 
   getTooltipDataAttrsForIndex(index) {
     if (this.valueCache[index]) {
+      console.log('[+] tooltipdataattrsforindex:',index);
       return this.valueCache[index].tooltipDataAttrs;
+    } else {
+      console.log('[!] no tooltipdata for index:',index);
     }
     return this.getTooltipDataAttrsForValue({ date: null, count: null });
   }
 
   getTooltipDataAttrsForValue(value) {
     const { tooltipDataAttrs } = this.props;
-
+    console.log('[+] getting tooltipdataattrsforvalue:',value,tooltipDataAttrs);
     if (typeof tooltipDataAttrs === 'function') {
-      return tooltipDataAttrs(value);
+      let v = tooltipDataAttrs(value);
+      console.log('[+] fnv:',v);
+      return v;
+    } else {
+      console.log('[!] nofnv');
     }
     return tooltipDataAttrs;
   }
