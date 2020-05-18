@@ -17,6 +17,7 @@ const CSS_PSEDUO_NAMESPACE = 'react-calendar-heatmap-';
 class CalendarHeatmap extends React.Component {
   getDateDifferenceInDays() {
     const { startDate, numDays } = this.props;
+    console.log('[+] getting date diff in days:',startDate, numDays);
     if (numDays) {
       // eslint-disable-next-line no-console
       console.warn(
@@ -25,76 +26,116 @@ class CalendarHeatmap extends React.Component {
       return numDays;
     }
     const timeDiff = this.getEndDate() - convertToDate(startDate);
-    return Math.ceil(timeDiff / MILLISECONDS_IN_ONE_DAY);
+    let diff = Math.ceil(timeDiff / MILLISECONDS_IN_ONE_DAY);
+    console.log('[+] diff is:',diff);
+    return diff;
   }
 
   getSquareSizeWithGutter() {
-    return SQUARE_SIZE + this.props.gutterSize;
+    let size = SQUARE_SIZE + this.props.gutterSize;
+    console.log('[+] square size w gutter is:',size);
+    return size;
   }
 
   getMonthLabelSize() {
+    console.log('[+] getting month label size');
+    let size = 0;
     if (!this.props.showMonthLabels) {
-      return 0;
+      console.log('[+] dont show month labels, returning 0');
+      return size;
     }
     if (this.props.horizontal) {
-      return SQUARE_SIZE + MONTH_LABEL_GUTTER_SIZE;
+      size = SQUARE_SIZE + MONTH_LABEL_GUTTER_SIZE;
+      console.log('[+] is horizontal:',size);
+      return size;
     }
-    return 2 * (SQUARE_SIZE + MONTH_LABEL_GUTTER_SIZE);
+    size = 2 * (SQUARE_SIZE + MONTH_LABEL_GUTTER_SIZE);
+    console.log('[+] s:',size);
+    return size;
   }
 
   getWeekdayLabelSize() {
+    console.log('[+] getting weekday label size');
+    let size = 0;
     if (!this.props.showWeekdayLabels) {
-      return 0;
+      console.log('[+] dont show weekday labels, returning 0');
+      return size;
     }
     if (this.props.horizontal) {
+      size = 30;
+      console.log('[+] is horizontal:',size);
       return 30;
     }
-    return SQUARE_SIZE * 1.5;
+    size = SQUARE_SIZE * 1.5;
+    console.log('[+] s:',size);
+    return size;
   }
 
   getStartDate() {
-    return shiftDate(this.getEndDate(), -this.getDateDifferenceInDays() + 1); // +1 because endDate is inclusive
+    let endDate = this.getEndDate();
+    let diff = this.getDateDifferenceInDays();
+    console.log('[+] getting startdate:',endDate,diff,`${endDate}, -${diff} + 1`);
+    let s = shiftDate(endDate, -diff + 1); // +1 because endDate is inclusive
+    console.log('[+] startDate:',s);
+    return s;
   }
 
   getEndDate() {
+    let converted = convertToDate(this.props.endDate);
+    console.log('[+] getting enddate:',this.props.endDate,converted);
     return getBeginningTimeForDate(convertToDate(this.props.endDate));
   }
 
   getStartDateWithEmptyDays() {
-    return shiftDate(this.getStartDate(), -this.getNumEmptyDaysAtStart());
+    let startDate = this.getStartDate();
+    let emptyDays = this.getNumEmptyDaysAtStart();
+    console.log('[+] getting start date with empty days:',startDate,emptyDays,`${startDate}, -${emptyDays}`);
+    return shiftDate(startDate, -emptyDays);
   }
 
   getNumEmptyDaysAtStart() {
-    return this.getStartDate().getDay();
+    let d = this.getStartDate().getDay();
+    console.log('[+] getting num empty days at start...',d);
+    return d;
   }
 
   getNumEmptyDaysAtEnd() {
-    return DAYS_IN_WEEK - 1 - this.getEndDate().getDay();
+    let d = DAYS_IN_WEEK - 1 - this.getEndDate().getDay();
+    console.log('[+] getting num empty days at end...',d);
+    return d;
   }
 
   getWeekCount() {
     const numDaysRoundedToWeek =
       this.getDateDifferenceInDays() + this.getNumEmptyDaysAtStart() + this.getNumEmptyDaysAtEnd();
-    return Math.ceil(numDaysRoundedToWeek / DAYS_IN_WEEK);
+    let r = Math.ceil(numDaysRoundedToWeek / DAYS_IN_WEEK);
+    console.log('[+] getting weekcount:',numDaysRoundedToWeek,r);
+    return
   }
 
   getWeekWidth() {
-    return DAYS_IN_WEEK * this.getSquareSizeWithGutter();
+    let w = DAYS_IN_WEEK * this.getSquareSizeWithGutter();
+    console.log('[+] getting week width:',w);
+    return w;
   }
 
   getWidth() {
-    return (
+    let w = (
       this.getWeekCount() * this.getSquareSizeWithGutter() -
       (this.props.gutterSize - this.getWeekdayLabelSize())
     );
+    console.log('[+] getting w:',w);
+    return w;
   }
 
   getHeight() {
-    return (
+    let h = (
       this.getWeekWidth() +
       (this.getMonthLabelSize() - this.props.gutterSize) +
       this.getWeekdayLabelSize()
     );
+    console.log('[+] getting h:',h);
+    return h;
   }
 
   getValueCache = memoizeOne((props) => {
