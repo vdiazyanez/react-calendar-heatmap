@@ -100,8 +100,12 @@ class CalendarHeatmap extends React.Component {
   getValueCache = memoizeOne((props) => {
     console.log('[+] gettinvaluecache:',props);
     return props.values.reduce((memo, value) => {
+      console.log('[+] converting date:',value.date);
       const date = convertToDate(value.date);
-      const index = Math.floor((date - this.getStartDateWithEmptyDays()) / MILLISECONDS_IN_ONE_DAY);
+      console.log('[+] converted date:',date);
+      const startDateWithEmptyDays = this.getStartDateWithEmptyDays();
+      console.log('[+] startdate emptydays:',startDateWithEmptyDays);
+      const index = Math.floor((date - startDateWithEmptyDays) / MILLISECONDS_IN_ONE_DAY);
       // eslint-disable-next-line no-param-reassign
       let tooltipDataAttrs = this.getTooltipDataAttrsForValue(value);
       console.log('[+] cache:',memo,value,date,index,tooltipDataAttrs);
